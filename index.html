@@ -1,0 +1,60 @@
+{% extends 'layout.html' %}
+{% block content %}
+<h2 class="text-primary mb-4">🌱 Smart Irrigation Dashboard</h2>
+
+<div class="row g-4">
+    <div class="col-md-6">
+        <div class="card shadow-sm p-3">
+            <h5 class="card-title">Latest Sensor Readings</h5>
+            <ul class="list-group list-group-flush">
+                {% for key, value in data.items() %}
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span><strong>{{ key }}</strong></span>
+                        <span>{{ value }}</span>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card shadow-sm p-3">
+            <h5 class="card-title">Soil Moisture Trend</h5>
+            <canvas id="moistureChart" width="400" height="300"></canvas>
+        </div>
+    </div>
+</div>
+
+<script>
+    const labels = {{ trend | map(attribute='Timestamp') | list | tojson }};
+    const data = {{ trend | map(attribute='Soil_Moisture') | list | tojson }};
+
+    const ctx = document.getElementById('moistureChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Soil Moisture (%)',
+                data: data,
+                borderColor: 'green',
+                backgroundColor: 'lightgreen',
+                fill: true,
+                tension: 0.3
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100
+                }
+            }
+        }
+    });
+
+    // Refresh the page every 10 seconds
+    setTimeout(() => { location.reload(); }, 10000);
+</script>
+{% endblock %}
