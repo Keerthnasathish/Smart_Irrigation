@@ -14,6 +14,19 @@
                     </li>
                 {% endfor %}
             </ul>
+
+            <!--  Week 3: Irrigation Status block -->
+            {% if irrigation_status == "ON" %}
+                <div class="alert alert-danger mt-4">
+                    💧 <strong>Irrigation is ON</strong><br>
+                    Soil moisture is below {{ threshold }}%
+                </div>
+            {% else %}
+                <div class="alert alert-success mt-4">
+                    ✅ <strong>Irrigation is OFF</strong><br>
+                    Soil moisture is sufficient (above {{ threshold }}%)
+                </div>
+            {% endif %}
         </div>
     </div>
 
@@ -58,3 +71,4 @@
     setTimeout(() => { location.reload(); }, 10000);
 </script>
 {% endblock %}
+
